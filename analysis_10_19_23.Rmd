@@ -1,0 +1,79 @@
+---
+title: "analysis_10_19-23"
+author: "Brian Vap"
+date: "2023-10-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Some libraries
+```{r, warning=FALSE}
+library(tidyverse)
+library(dplyr)
+library(corrplot)
+library(ggplot2)
+library(ggmap)
+```
+
+## Importing and some data filtering
+```{r, warning=FALSE}
+#Importing data
+pace_data <- read_csv("pace_data.csv")
+uscities <- read_csv("uscities.csv")
+
+#Removing columns not needed from US cities dataset
+uscities <- uscities %>% select(-county_fips_all, -county_name_all, -cdp, -zips)
+
+#Filtering uscities dataset by population - don't want any super duper tiny towns
+uscities <- uscities[uscities$population >= 10000, ]
+```
+
+## Descriptive Stats on both datasets
+
+```{r, warning=FALSE}
+#Descriptive Stats for pace_data
+summary(pace_data)
+
+#Descriptive Stats for uscities
+summary(uscities)
+```
+
+## Pace_data correlation matrix
+```{r, warning=FALSE}
+numeric_pace <- pace_data[sapply(pace_data, is.numeric)]
+correlation_matrix1 <- cor(numeric_pace)
+corrplot(correlation_matrix1)
+```
+
+## uscities correlation matrix
+```{r, warning=FALSE}
+#uscities correlation matrix
+numeric_cities <- uscities[sapply(uscities, is.numeric)]
+correlation_matrix <- cor(numeric_cities, use="pairwise.complete.obs")
+corrplot(correlation_matrix)
+```
+
+## Distribution of Total Amount Financed in pace_data - dep variable
+```{r, warning=FALSE}
+ggplot(pace_data, aes(x=`PACE Asset Balance`)) + geom_histogram(fill="lightblue", color="black") + ggtitle("Distribution of Total Amount Financed")
+```
+
+## Distribution of population in US cities, omitting all citiest below 10000 pop - most are tiny
+```{r, warning=FALSE}
+ggplot(uscities, aes(x=population)) + geom_histogram(fill="lightblue", color="black") + ggtitle("Distribution of Population")
+```
+
+## Visualisation of cities in the uscities dataset
+```{r, warning=FALSE}
+register_google(key = "AIzaSyA34GsIvCy6603uh_3P4-yFObbiweCegHI")
+
+us_map <- get_map(location = "United States", zoom = 4)
+
+ggmap(us_map) + 
+  geom_point(data = uscities, aes(x = lng, y = lat), color = "red", alpha = 0.5) +
+  theme_minimal() +
+  labs(title = "Locations on US Map")
+```
