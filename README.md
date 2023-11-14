@@ -6,8 +6,12 @@ I will be identifying what variables are the best predictors of Total Amount fin
 This project will be mostly done in R-Studio.
 
 Data:
-Data is aquired from PACE Equity and cannot be shared. 
+Data is aquired from PACE Equity and is located in the pace_data.csv
+Data purchased from SimpleMaps and cannot be shared. Link here https://simplemaps.com/data/us-cities
 
 Code:
-None yet :)
+All Code is located in the DA401_Final.R File.
+All the code can be ran if you have access to both datasets.
 
+Final Report:
+Final Writeups and the main report found in the PEQ_Project_Report.pdf
